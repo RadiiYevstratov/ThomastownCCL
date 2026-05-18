@@ -7,6 +7,8 @@ import { fileURLToPath } from 'url';
 import { dirname, join, extname } from 'path';
 import multer from 'multer';
 
+// npm run optimize:images
+
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 const DATA_FILE = join(__dirname, 'data.json');

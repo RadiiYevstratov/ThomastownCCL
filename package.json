@@ -8,7 +8,8 @@
     "start": "node server/server.js",
     "dev": "concurrently \"vite\" \"node server/server.js\"",
     "dev:client": "vite",
-    "dev:server": "node server/server.js"
+    "dev:server": "node server/server.js",
+    "optimize:images": "node scripts/optimize-images.js"
   },
   "dependencies": {
     "@emotion/react": "11.14.0",
@@ -58,10 +59,10 @@
     "multer": "^2.1.1",
     "next-themes": "0.4.6",
     "react": "18.3.1",
-    "react-dom": "18.3.1",
     "react-day-picker": "8.10.1",
     "react-dnd": "16.0.1",
     "react-dnd-html5-backend": "16.0.1",
+    "react-dom": "18.3.1",
     "react-hook-form": "7.55.0",
     "react-popper": "2.3.0",
     "react-resizable-panels": "2.1.7",
@@ -81,10 +82,10 @@
     "@types/react-slick": "^0.23.13",
     "@vitejs/plugin-react": "4.7.0",
     "concurrently": "9.1.2",
+    "sharp": "^0.34.5",
     "tailwindcss": "4.1.12",
     "vite": "6.3.5"
   },
-  "peerDependencies": {},
   "pnpm": {
     "overrides": {
       "vite": "6.3.5"

@@ -57,7 +57,7 @@ function getEventIcon(type: string) {
 
 export default function Home() {
   const { events, news } = useData();
-  const upcomingEvents = events.slice(0, 3);
+  const upcomingEvents = events.slice(0, 1);
   const newsItems = news.slice(0, 3);
   const sliderSettings = {
     dots: true,
@@ -190,13 +190,13 @@ export default function Home() {
       <section className="py-16 bg-gray-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <h2 className="text-3xl text-center mb-12 text-gray-900">Upcoming Events</h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div className="flex justify-center">
             {upcomingEvents.map((event, index) => {
               const Icon = getEventIcon(event.type);
               return (
                 <div
                   key={index}
-                  className="bg-white rounded-xl shadow-lg p-6 hover:shadow-xl transition-shadow"
+                  className="bg-white rounded-xl shadow-lg p-6 hover:shadow-xl transition-shadow w-full max-w-sm"
                 >
                   <div className="w-14 h-14 bg-[var(--brand-light)] rounded-full flex items-center justify-center mb-4">
                     <Icon className="w-7 h-7 text-[var(--brand)]" />

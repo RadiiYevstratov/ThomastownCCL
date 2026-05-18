@@ -48,13 +48,13 @@ export default function Concerts() {
         <section className="py-16 bg-white">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <h2 className="text-3xl mb-10 text-gray-900">Upcoming Events</h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {events.map((event: Event, index: number) => {
+            <div className="flex justify-center">
+              {events.slice(0, 1).map((event: Event, index: number) => {
                 const Icon = getEventIcon(event.type);
                 return (
                   <div
                     key={index}
-                    className="bg-white rounded-xl shadow-lg p-7 hover:shadow-xl transition-shadow border border-gray-100"
+                    className="bg-white rounded-xl shadow-lg p-7 hover:shadow-xl transition-shadow border border-gray-100 w-full max-w-sm"
                   >
                     <div className="w-14 h-14 bg-[var(--brand-light)] rounded-full flex items-center justify-center mb-4">
                       <Icon className="w-7 h-7 text-[var(--brand)]" />

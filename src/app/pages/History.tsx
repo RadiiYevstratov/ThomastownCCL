@@ -85,8 +85,8 @@ export default function History() {
             </div>
             <div>
               <img
-                src="https://images.unsplash.com/photo-1774284982125-59afd29d355c?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxJcmlzaCUyMHRvd24lMjBoZXJpdGFnZSUyMGNvbW11bml0eSUyMGNlbnRlcnxlbnwxfHx8fDE3Nzg2NzIxMTV8MA&ixlib=rb-4.1.0&q=80&w=1080"
-                alt="Historic building"
+                src="/images/playground/enterance.jpg"
+                alt="Community Centre entrance"
                 className="w-full h-[420px] object-cover rounded-xl shadow-xl"
               />
             </div>

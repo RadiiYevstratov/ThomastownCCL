@@ -36,7 +36,7 @@ export default function Contact() {
       <section
         className="relative h-[400px] bg-cover bg-center"
         style={{
-          backgroundImage: `url('https://images.unsplash.com/photo-1775830979246-c7296ae4225f?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHw0fHxJcmlzaCUyMHRvd24lMjBoZXJpdGFnZSUyMGNvbW11bml0eSUyMGNlbnRlcnxlbnwxfHx8fDE3Nzg2NzIxMTV8MA&ixlib=rb-4.1.0&q=80&w=1080')`,
+          backgroundImage: `url('/images/playground/gym.jpg')`,
         }}
       >
         <div className="absolute inset-0 bg-black/60 flex items-center">

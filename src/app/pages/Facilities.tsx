@@ -117,7 +117,7 @@ export default function Facilities() {
       <section
         className="relative h-[400px] bg-cover bg-center"
         style={{
-          backgroundImage: `url('/images/playground/gym.jpg')`,
+          backgroundImage: `url('/images/tidyTown/1000064453.jpg')`,
         }}
       >
         <div className="absolute inset-0 bg-black/60 flex items-center">

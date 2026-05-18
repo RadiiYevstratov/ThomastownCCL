@@ -41,7 +41,7 @@ export default function Footer() {
               </li>
               <li>
                 <Link to="/concerts" className="text-sm hover:text-[var(--brand)] transition-colors">
-                  Concerts
+                  Events
                 </Link>
               </li>
               <li>

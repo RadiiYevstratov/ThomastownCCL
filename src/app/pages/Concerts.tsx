@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { Calendar, MapPin, Clock, Music, Users, Star, Mic2, Palette, BookOpen, Clapperboard } from "lucide-react";
 import { useData } from "../context/DataContext";
-import type { Event } from "../context/DataContext";
 
 function getEventIcon(type: string) {
   switch (type) {
@@ -16,7 +15,7 @@ function getEventIcon(type: string) {
 }
 
 export default function Concerts() {
-  const { concerts, events } = useData();
+  const { concerts } = useData();
   const upcomingConcerts = concerts.filter((c) => !c.isPast);
   const pastConcerts = concerts.filter((c) => c.isPast);
 
@@ -36,7 +35,7 @@ export default function Concerts() {
       >
         <div className="absolute inset-0 bg-black/60 flex items-center">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full text-center">
-            <h1 className="text-5xl md:text-6xl text-white mb-4">Concerts & Events</h1>
+            <h1 className="text-5xl md:text-6xl text-white mb-4">Events</h1>
             <p className="text-xl text-gray-200 max-w-2xl mx-auto">
               Experience world-class music and entertainment in the heart of Thomastown
             </p>
@@ -44,40 +43,9 @@ export default function Concerts() {
         </div>
       </section>
 
-      {events.length > 0 && (
-        <section className="py-16 bg-white">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <h2 className="text-3xl mb-10 text-gray-900">Upcoming Events</h2>
-            <div className="flex justify-center">
-              {events.slice(0, 1).map((event: Event, index: number) => {
-                const Icon = getEventIcon(event.type);
-                return (
-                  <div
-                    key={index}
-                    className="bg-white rounded-xl shadow-lg p-7 hover:shadow-xl transition-shadow border border-gray-100 w-full max-w-sm"
-                  >
-                    <div className="w-14 h-14 bg-[var(--brand-light)] rounded-full flex items-center justify-center mb-4">
-                      <Icon className="w-7 h-7 text-[var(--brand)]" />
-                    </div>
-                    <span className="inline-block px-3 py-1 bg-[var(--brand-light)] text-[var(--brand-dark)] rounded-full text-sm mb-3">
-                      {event.type}
-                    </span>
-                    <h3 className="text-xl mb-2 text-gray-900">{event.title}</h3>
-                    <div className="flex items-center text-gray-600 mt-3">
-                      <Calendar className="w-5 h-5 mr-2 text-[var(--brand)]" />
-                      {event.date}
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-          </div>
-        </section>
-      )}
-
       <section className="py-16 bg-gray-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="text-3xl mb-12 text-gray-900">Upcoming Concerts</h2>
+          <h2 className="text-3xl mb-12 text-gray-900">Upcoming Events</h2>
           <div className="space-y-8">
             {upcomingConcerts.map((concert, index) => (
               <div

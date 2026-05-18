@@ -2,7 +2,6 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router";
 import {
   Music,
-  Calendar,
   Newspaper,
   Plus,
   Pencil,
@@ -18,9 +17,9 @@ import {
 } from "lucide-react";
 import { useAuth, getAuthHeader } from "../context/AuthContext";
 import { useData } from "../context/DataContext";
-import type { Concert, Event, NewsArticle } from "../context/DataContext";
+import type { Concert, NewsArticle } from "../context/DataContext";
 
-type Tab = "concerts" | "events" | "news";
+type Tab = "concerts" | "news";
 
 function moveItem<T>(arr: T[], from: number, to: number): T[] {
   const result = [...arr];
@@ -159,11 +158,10 @@ export default function AdminPanel() {
   const { logout, isLoggedIn } = useAuth();
   const navigate = useNavigate();
   const {
-    concerts, events, news,
+    concerts, news,
     addConcert, updateConcert, deleteConcert,
-    addEvent, updateEvent, deleteEvent,
     addNews, updateNews, deleteNews,
-    reorderConcerts, reorderEvents, reorderNews,
+    reorderConcerts, reorderNews,
   } = useData();
 
   const [tab, setTab] = useState<Tab>("concerts");
@@ -172,10 +170,6 @@ export default function AdminPanel() {
   const [cForm, setCForm] = useState<Omit<Concert, "id"> | null>(null);
   const [cEditId, setCEditId] = useState<string | null>(null);
   const [cDelId, setCDelId] = useState<string | null>(null);
-
-  const [eForm, setEForm] = useState<Omit<Event, "id"> | null>(null);
-  const [eEditId, setEEditId] = useState<string | null>(null);
-  const [eDelId, setEDelId] = useState<string | null>(null);
 
   const [nForm, setNForm] = useState<Omit<NewsArticle, "id"> | null>(null);
   const [nEditId, setNEditId] = useState<string | null>(null);
@@ -192,7 +186,6 @@ export default function AdminPanel() {
 
   const switchTab = (newTab: Tab) => {
     setCForm(null); setCEditId(null); setCDelId(null);
-    setEForm(null); setEEditId(null); setEDelId(null);
     setNForm(null); setNEditId(null); setNDelId(null);
     setTab(newTab);
   };
@@ -205,23 +198,15 @@ export default function AdminPanel() {
   const emptyConcert: Omit<Concert, "id"> = {
     title: "", artist: "", date: "", time: "", price: "", image: "", description: "", isPast: false, eventType: "Concert", flyers: [],
   };
-  const emptyEvent: Omit<Event, "id"> = { title: "", date: "", type: "Event" };
   const emptyNews: Omit<NewsArticle, "id"> = {
     title: "", date: "", category: "Programs", image: "", excerpt: "",
   };
 
   const saveConcert = () => {
     if (!cForm || !cForm.title.trim()) return;
-    if (cEditId) { updateConcert({ ...cForm, id: cEditId }); showToast("✅ Concert updated successfully!"); }
-    else { addConcert(cForm); showToast("✅ New concert added successfully!"); }
+    if (cEditId) { updateConcert({ ...cForm, id: cEditId }); showToast("✅ Event updated successfully!"); }
+    else { addConcert(cForm); showToast("✅ New event added successfully!"); }
     setCForm(null); setCEditId(null);
-  };
-
-  const saveEvent = () => {
-    if (!eForm || !eForm.title.trim()) return;
-    if (eEditId) { updateEvent({ ...eForm, id: eEditId }); showToast("✅ Event updated successfully!"); }
-    else { addEvent(eForm); showToast("✅ New event added successfully!"); }
-    setEForm(null); setEEditId(null);
   };
 
   const saveNews = () => {
@@ -232,8 +217,7 @@ export default function AdminPanel() {
   };
 
   const tabs: { id: Tab; label: string; Icon: typeof Music }[] = [
-    { id: "concerts", label: "Concerts", Icon: Music },
-    { id: "events", label: "Upcoming Events", Icon: Calendar },
+    { id: "concerts", label: "Events", Icon: Music },
     { id: "news", label: "News Articles", Icon: Newspaper },
   ];
 
@@ -293,9 +277,9 @@ export default function AdminPanel() {
           <div className="bg-white rounded-2xl shadow-lg p-6 md:p-8">
             <div className="flex items-center justify-between mb-6 flex-wrap gap-3">
               <div>
-                <h2 className="text-3xl font-bold text-gray-800">Manage Concerts</h2>
+                <h2 className="text-3xl font-bold text-gray-800">Manage Events</h2>
                 <p className="text-gray-500 text-lg mt-1">
-                  Add, edit or remove concerts shown on the Concerts page
+                  Add, edit or remove events shown on the Events page
                 </p>
               </div>
               {!cForm && (
@@ -304,7 +288,7 @@ export default function AdminPanel() {
                   className="flex items-center gap-2 bg-green-600 text-white px-6 py-3 rounded-xl text-xl font-semibold hover:bg-green-700 transition-colors"
                 >
                   <Plus className="w-6 h-6" />
-                  Add New Concert
+                  Add New Event
                 </button>
               )}
             </div>
@@ -312,11 +296,11 @@ export default function AdminPanel() {
             {cForm && (
               <div className="bg-[var(--brand-lighter)] border-2 border-[var(--brand-soft)] rounded-2xl p-6 mb-8">
                 <h3 className="text-2xl font-bold text-[var(--brand-dark)] mb-4">
-                  {cEditId ? "✏️ Edit Concert" : "➕ Add New Concert"}
+                  {cEditId ? "✏️ Edit Event" : "➕ Add New Event"}
                 </h3>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6">
                   <div>
-                    <label className={labelCls}>Concert Title *</label>
+                    <label className={labelCls}>Event Title *</label>
                     <input className={inputCls} value={cForm.title} onChange={(e) => setCForm({ ...cForm, title: e.target.value })} placeholder="e.g. Summer Jazz Night" />
                   </div>
                   <div>
@@ -349,7 +333,7 @@ export default function AdminPanel() {
                     </select>
                   </div>
                   <div className="md:col-span-2">
-                    <label className={labelCls}>Concert Photo</label>
+                    <label className={labelCls}>Event Photo</label>
                     <ImageField value={cForm.image} onChange={(url) => setCForm({ ...cForm, image: url })} />
                   </div>
                   <div className="md:col-span-2">
@@ -372,10 +356,10 @@ export default function AdminPanel() {
                   {cForm.isPast && (
                     <div className="md:col-span-2 bg-white border-2 border-[var(--brand-border)] rounded-xl p-5">
                       <label className="block text-lg font-semibold text-gray-700 mb-1">
-                        📸 Concert Flyers &amp; Photos
+                        📸 Event Flyers &amp; Photos
                       </label>
                       <p className="text-base text-gray-500 mb-4">
-                        Upload flyer photos or concert images. You can add as many as you like — select multiple at once.
+                        Upload flyer photos or event images. You can add as many as you like — select multiple at once.
                       </p>
 
                       {(cForm.flyers || []).length > 0 && (
@@ -414,7 +398,7 @@ export default function AdminPanel() {
                 </div>
                 <div className="flex flex-wrap gap-4 mt-6">
                   <button onClick={saveConcert} className="flex items-center gap-2 bg-[var(--brand)] text-white px-8 py-4 rounded-xl text-xl font-bold hover:bg-[var(--brand-hover)] transition-colors">
-                    <Save className="w-5 h-5" /> Save Concert
+                    <Save className="w-5 h-5" /> Save Event
                   </button>
                   <button onClick={() => { setCForm(null); setCEditId(null); }} className="flex items-center gap-2 bg-gray-200 text-gray-700 px-8 py-4 rounded-xl text-xl font-bold hover:bg-gray-300 transition-colors">
                     <X className="w-5 h-5" /> Cancel
@@ -425,14 +409,14 @@ export default function AdminPanel() {
 
             <div className="space-y-3">
               {concerts.length === 0 && (
-                <p className="text-xl text-gray-400 text-center py-12">No concerts yet. Click "Add New Concert" to get started.</p>
+                <p className="text-xl text-gray-400 text-center py-12">No events yet. Click "Add New Event" to get started.</p>
               )}
               {concerts.map((c, cIdx) => (
                 <div key={c.id} className="border-2 border-gray-200 rounded-xl p-5 bg-gray-50">
                   {cDelId === c.id ? (
                     <div className="flex items-center gap-4 flex-wrap">
                       <span className="text-xl font-semibold text-red-700">⚠️ Are you sure you want to delete "{c.title}"?</span>
-                      <button onClick={() => { deleteConcert(c.id); setCDelId(null); showToast("Concert deleted."); }} className="bg-red-600 text-white px-6 py-3 rounded-xl text-lg font-bold hover:bg-red-700">
+                      <button onClick={() => { deleteConcert(c.id); setCDelId(null); showToast("Event deleted."); }} className="bg-red-600 text-white px-6 py-3 rounded-xl text-lg font-bold hover:bg-red-700">
                         Yes, Delete It
                       </button>
                       <button onClick={() => setCDelId(null)} className="bg-gray-200 text-gray-700 px-6 py-3 rounded-xl text-lg font-bold hover:bg-gray-300">
@@ -459,110 +443,6 @@ export default function AdminPanel() {
                           <Pencil className="w-5 h-5" /> Edit
                         </button>
                         <button onClick={() => setCDelId(c.id)} className="flex items-center gap-2 bg-red-100 text-red-700 px-5 py-3 rounded-xl text-lg font-semibold hover:bg-red-200 transition-colors">
-                          <Trash2 className="w-5 h-5" /> Delete
-                        </button>
-                      </div>
-                    </div>
-                  )}
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
-
-        {tab === "events" && (
-          <div className="bg-white rounded-2xl shadow-lg p-6 md:p-8">
-            <div className="flex items-center justify-between mb-6 flex-wrap gap-3">
-              <div>
-                <h2 className="text-3xl font-bold text-gray-800">Manage Upcoming Events</h2>
-                <p className="text-gray-500 text-lg mt-1">
-                  These events appear on the Home page and on the Concerts &amp; Events page
-                </p>
-              </div>
-              {!eForm && (
-                <button
-                  onClick={() => { setEForm(emptyEvent); setEEditId(null); }}
-                  className="flex items-center gap-2 bg-green-600 text-white px-6 py-3 rounded-xl text-xl font-semibold hover:bg-green-700 transition-colors"
-                >
-                  <Plus className="w-6 h-6" />
-                  Add New Event
-                </button>
-              )}
-            </div>
-
-            {eForm && (
-              <div className="bg-blue-50 border-2 border-blue-300 rounded-2xl p-6 mb-8">
-                <h3 className="text-2xl font-bold text-blue-800 mb-4">
-                  {eEditId ? "✏️ Edit Event" : "➕ Add New Event"}
-                </h3>
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-x-6">
-                  <div className="md:col-span-2">
-                    <label className={labelCls}>Event Title *</label>
-                    <input className={inputCls} value={eForm.title} onChange={(e) => setEForm({ ...eForm, title: e.target.value })} placeholder="e.g. Community Heritage Day" />
-                  </div>
-                  <div>
-                    <label className={labelCls}>Date</label>
-                    <input className={inputCls} value={eForm.date} onChange={(e) => setEForm({ ...eForm, date: e.target.value })} placeholder="e.g. June 5, 2026" />
-                  </div>
-                  <div>
-                    <label className={labelCls}>Event Type</label>
-                    <select className={inputCls} value={eForm.type} onChange={(e) => setEForm({ ...eForm, type: e.target.value })}>
-                      <option>Concert</option>
-                      <option>Event</option>
-                      <option>Festival</option>
-                      <option>Workshop</option>
-                      <option>Exhibition</option>
-                      <option>Meeting</option>
-                    </select>
-                  </div>
-                </div>
-                <div className="flex flex-wrap gap-4 mt-6">
-                  <button onClick={saveEvent} className="flex items-center gap-2 bg-blue-600 text-white px-8 py-4 rounded-xl text-xl font-bold hover:bg-blue-700 transition-colors">
-                    <Save className="w-5 h-5" /> Save Event
-                  </button>
-                  <button onClick={() => { setEForm(null); setEEditId(null); }} className="flex items-center gap-2 bg-gray-200 text-gray-700 px-8 py-4 rounded-xl text-xl font-bold hover:bg-gray-300 transition-colors">
-                    <X className="w-5 h-5" /> Cancel
-                  </button>
-                </div>
-              </div>
-            )}
-
-            <div className="space-y-3">
-              {events.length === 0 && (
-                <p className="text-xl text-gray-400 text-center py-12">No events yet. Click "Add New Event" to get started.</p>
-              )}
-              {events.map((e, eIdx) => (
-                <div key={e.id} className="border-2 border-gray-200 rounded-xl p-5 bg-gray-50">
-                  {eDelId === e.id ? (
-                    <div className="flex items-center gap-4 flex-wrap">
-                      <span className="text-xl font-semibold text-red-700">⚠️ Are you sure you want to delete "{e.title}"?</span>
-                      <button onClick={() => { deleteEvent(e.id); setEDelId(null); showToast("Event deleted."); }} className="bg-red-600 text-white px-6 py-3 rounded-xl text-lg font-bold hover:bg-red-700">
-                        Yes, Delete It
-                      </button>
-                      <button onClick={() => setEDelId(null)} className="bg-gray-200 text-gray-700 px-6 py-3 rounded-xl text-lg font-bold hover:bg-gray-300">
-                        No, Keep It
-                      </button>
-                    </div>
-                  ) : (
-                    <div className="flex items-center justify-between flex-wrap gap-3">
-                      <div>
-                        <h4 className="text-xl font-bold text-gray-800">{e.title}</h4>
-                        <p className="text-lg text-gray-500">
-                          {e.date} —{" "}
-                          <span className="text-blue-600 font-medium">{e.type}</span>
-                        </p>
-                      </div>
-                      <div className="flex gap-2 flex-wrap">
-                        <button onClick={() => reorderEvents(moveItem(events, eIdx, eIdx - 1))} disabled={eIdx === 0} className="p-3 rounded-xl bg-gray-100 text-gray-600 hover:bg-gray-200 disabled:opacity-30 disabled:cursor-not-allowed transition-colors" title="Move up">
-                          <ChevronUp className="w-5 h-5" />
-                        </button>
-                        <button onClick={() => reorderEvents(moveItem(events, eIdx, eIdx + 1))} disabled={eIdx === events.length - 1} className="p-3 rounded-xl bg-gray-100 text-gray-600 hover:bg-gray-200 disabled:opacity-30 disabled:cursor-not-allowed transition-colors" title="Move down">
-                          <ChevronDown className="w-5 h-5" />
-                        </button>
-                        <button onClick={() => { const { id, ...rest } = e; setEForm(rest); setEEditId(id); }} className="flex items-center gap-2 bg-blue-100 text-blue-700 px-5 py-3 rounded-xl text-lg font-semibold hover:bg-blue-200 transition-colors">
-                          <Pencil className="w-5 h-5" /> Edit
-                        </button>
-                        <button onClick={() => setEDelId(e.id)} className="flex items-center gap-2 bg-red-100 text-red-700 px-5 py-3 rounded-xl text-lg font-semibold hover:bg-red-200 transition-colors">
                           <Trash2 className="w-5 h-5" /> Delete
                         </button>
                       </div>

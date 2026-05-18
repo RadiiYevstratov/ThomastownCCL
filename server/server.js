@@ -3,7 +3,6 @@ import express from 'express';
 import cors from 'cors';
 import crypto from 'crypto';
 import { readFileSync, writeFileSync, mkdirSync, existsSync } from 'fs';
-import { exec, execSync } from 'child_process';
 import { fileURLToPath } from 'url';
 import { dirname, join, extname } from 'path';
 import multer from 'multer';
@@ -13,6 +12,10 @@ const __dirname = dirname(__filename);
 const DATA_FILE = join(__dirname, 'data.json');
 const UPLOADS_DIR = join(__dirname, 'uploads');
 const DIST_DIR = join(__dirname, '..', 'dist');
+
+const GITHUB_TOKEN  = process.env.GITHUB_TOKEN;
+const GITHUB_REPO   = process.env.GITHUB_REPO;
+const GITHUB_BRANCH = process.env.GITHUB_BRANCH || 'main';
 
 const ADMIN_USER = process.env.ADMIN_USER || 'admin';
 const ADMIN_PASS = process.env.ADMIN_PASS || 'admin123';
@@ -70,40 +73,60 @@ function readData() {
 
 function writeData(data) {
   writeFileSync(DATA_FILE, JSON.stringify(data, null, 2));
-  scheduleAutoCommit();
+  scheduleGitHubPush(data);
 }
 
-let autoCommitTimer = null;
-let pendingCommit = false;
+let githubSha = null;
+let githubPushTimer = null;
+let pendingPushData = null;
 
-function runAutoCommit() {
-  pendingCommit = false;
-  autoCommitTimer = null;
-  const repoRoot = join(__dirname, '..');
+async function pushToGitHub(data) {
+  if (!GITHUB_TOKEN || !GITHUB_REPO) return;
   try {
-    execSync('git add server/data.json && git commit -m "Auto-save: data updated" && git push', { cwd: repoRoot });
-    console.log('[auto-commit] data.json saved to git');
+    const apiUrl = `https://api.github.com/repos/${GITHUB_REPO}/contents/server/data.json`;
+    const headers = {
+      'Authorization': `Bearer ${GITHUB_TOKEN}`,
+      'Accept': 'application/vnd.github.v3+json',
+      'Content-Type': 'application/json',
+    };
+    if (!githubSha) {
+      const res = await fetch(`${apiUrl}?ref=${GITHUB_BRANCH}`, { headers });
+      const info = await res.json();
+      githubSha = info.sha;
+    }
+    const res = await fetch(apiUrl, {
+      method: 'PUT',
+      headers,
+      body: JSON.stringify({
+        message: 'Auto-save: data updated',
+        content: Buffer.from(JSON.stringify(data, null, 2)).toString('base64'),
+        sha: githubSha,
+        branch: GITHUB_BRANCH,
+      }),
+    });
+    const result = await res.json();
+    if (result.content?.sha) {
+      githubSha = result.content.sha;
+      console.log('[github] data.json updated in repo');
+    } else {
+      githubSha = null;
+      console.error('[github] unexpected response:', JSON.stringify(result));
+    }
   } catch (e) {
-    console.log('[auto-commit] no changes to commit or push failed.');
+    githubSha = null;
+    console.error('[github] push failed:', e.message);
   }
 }
 
-function scheduleAutoCommit() {
-  pendingCommit = true;
-  if (autoCommitTimer) clearTimeout(autoCommitTimer);
-  autoCommitTimer = setTimeout(runAutoCommit, 1000);
+function scheduleGitHubPush(data) {
+  pendingPushData = data;
+  if (githubPushTimer) clearTimeout(githubPushTimer);
+  githubPushTimer = setTimeout(() => {
+    pushToGitHub(pendingPushData);
+    pendingPushData = null;
+    githubPushTimer = null;
+  }, 1500);
 }
-
-function exitHandler() {
-  if (pendingCommit) {
-    console.log('[auto-commit] flushing before exit...');
-    runAutoCommit();
-  }
-  process.exit(0);
-}
-
-process.on('SIGINT', exitHandler);
-process.on('SIGTERM', exitHandler);
 
 // ── File Upload ──────────────────────────────────────────────────────────────
 app.post('/api/upload', requireAuth, upload.single('file'), (req, res) => {

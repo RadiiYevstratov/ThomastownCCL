@@ -56,8 +56,8 @@ function getEventIcon(type: string) {
 }
 
 export default function Home() {
-  const { events, news } = useData();
-  const upcomingEvents = events.slice(0, 1);
+  const { concerts, news } = useData();
+  const upcomingEvents = concerts.filter((c) => !c.isPast).slice(0, 3);
   const newsItems = news.slice(0, 3);
   const sliderSettings = {
     dots: true,
@@ -194,26 +194,30 @@ export default function Home() {
       <section className="py-16 bg-gray-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <h2 className="text-3xl text-center mb-12 text-gray-900">Upcoming Events</h2>
-          <div className="flex justify-center">
-            {upcomingEvents.map((event, index) => {
-              const Icon = getEventIcon(event.type);
-              return (
-                <div
-                  key={index}
-                  className="bg-white rounded-xl shadow-lg p-6 hover:shadow-xl transition-shadow w-full max-w-sm"
-                >
-                  <div className="w-14 h-14 bg-[var(--brand-light)] rounded-full flex items-center justify-center mb-4">
-                    <Icon className="w-7 h-7 text-[var(--brand)]" />
+          {upcomingEvents.length === 0 ? (
+            <p className="text-center text-gray-500">No upcoming events at the moment. Check back soon!</p>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+              {upcomingEvents.map((concert, index) => {
+                const Icon = getEventIcon(concert.eventType ?? "Event");
+                return (
+                  <div
+                    key={index}
+                    className="bg-white rounded-xl shadow-lg p-6 hover:shadow-xl transition-shadow"
+                  >
+                    <div className="w-14 h-14 bg-[var(--brand-light)] rounded-full flex items-center justify-center mb-4">
+                      <Icon className="w-7 h-7 text-[var(--brand)]" />
+                    </div>
+                    <h3 className="text-xl mb-2 text-gray-900">{concert.title}</h3>
+                    <p className="text-gray-600 mb-2">{concert.date}</p>
+                    <span className="inline-block px-3 py-1 bg-[var(--brand-light)] text-[var(--brand-dark)] rounded-full text-sm">
+                      {concert.eventType ?? "Event"}
+                    </span>
                   </div>
-                  <h3 className="text-xl mb-2 text-gray-900">{event.title}</h3>
-                  <p className="text-gray-600 mb-2">{event.date}</p>
-                  <span className="inline-block px-3 py-1 bg-[var(--brand-light)] text-[var(--brand-dark)] rounded-full text-sm">
-                    {event.type}
-                  </span>
-                </div>
-              );
-            })}
-          </div>
+                );
+              })}
+            </div>
+          )}
           <div className="text-center mt-8">
             <Link
               to="/concerts"
@@ -229,6 +233,9 @@ export default function Home() {
       <section className="py-16 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <h2 className="text-3xl text-center mb-12 text-gray-900">Latest News</h2>
+          {newsItems.length === 0 && (
+            <p className="text-center text-gray-500">No news articles yet. Check back soon!</p>
+          )}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {newsItems.map((item, index) => (
               <div

@@ -30,7 +30,7 @@ const rooms = [
     ],
   },
   {
-    name: "New Hall",
+    name: "Clifford Room",
     description:
       "Our newly built multipurpose hall offers a bright, spacious, and modern environment suitable for a wide range of events, performances, activities, and community gatherings. Designed with flexibility and comfort in mind, the hall provides a welcoming space that can easily adapt to different occasions and community needs.",
     capacity: "Up to 150 guests",
@@ -41,7 +41,7 @@ const rooms = [
     ],
   },
   {
-    name: "Community Room",
+    name: "Concours Area",
     description:
       "A versatile space available for meetings, workshops, classes, and community events of all kinds.",
     capacity: "Up to 80 guests",
@@ -86,7 +86,7 @@ const rooms = [
     description:
       "Well-equipped learning spaces available for courses, workshops, tutoring, and educational programmes.",
     capacity: "Up to 25 per room",
-    features: ["Whiteboards", "Comfortable spaces", "Flexible layouts"],
+    features: ["Darwin Room", "Lyndsey Room", "Whiteboards", "Comfortable spaces", "Flexible layouts"],
     photos: [
       "/images/rooms/classrooms/1000005861.jpg",
       "/images/rooms/classrooms/1000005869.jpg",

@@ -1,13 +1,15 @@
 import { Outlet, useLocation } from "react-router";
-import { useEffect, Suspense } from "react";
+import { useLayoutEffect, Suspense } from "react";
 import Header from "./Header";
 import Footer from "./Footer";
 
 function ScrollToTop() {
-  const { pathname } = useLocation();
-  useEffect(() => {
-    window.scrollTo(0, 0);
-  }, [pathname]);
+  const { key, hash } = useLocation();
+  useLayoutEffect(() => {
+    if (hash) return;
+    document.documentElement.scrollTop = 0;
+    document.body.scrollTop = 0;
+  }, [key]);
   return null;
 }
 

@@ -110,7 +110,7 @@ function GalleryCarousel({ photos, delayMs }: { photos: string[]; delayMs: numbe
         fadeTimeout = setTimeout(() => {
           setCurrentIndex((prev) => (prev + 1) % photos.length);
           setVisible(true);
-        }, 600);
+        }, 750);
       }, 5000);
     }, delayMs);
 

@@ -126,10 +126,12 @@ function GalleryCarousel({ photos, delayMs }: { photos: string[]; delayMs: numbe
       <img
         src={photos[currentIndex]}
         alt="Community Gallery"
-        style={{ filter: "contrast(75%)" }}
-        className={`w-full h-full object-cover transition-opacity duration-700 ${
-          visible ? "opacity-100" : "opacity-0"
-        }`}
+        style={{
+          filter: "contrast(75%)",
+          transition: visible ? "opacity 2.0s ease" : "opacity 0.6s ease",
+          opacity: visible ? 1 : 0,
+        }}
+        className="w-full h-full object-cover"
         loading="lazy"
         decoding="async"
       />
